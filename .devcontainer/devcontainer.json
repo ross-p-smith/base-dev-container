@@ -1,0 +1,46 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/alpine
+{
+	"name": "YourProjectName",
+	"dockerFile": "Dockerfile",
+	"mounts": [
+		// Mounts the login details from the host machine to azcli works in the container
+		"type=bind,source=${env:HOME}${env:USERPROFILE}/.azure,target=/home/vscode/.azure",
+		// Mount docker socket for docker builds
+		//"type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock"
+	],
+	"containerEnv": {
+		"DOCKER_BUILDKIT": "1"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.azurecli",
+				"hashicorp.terraform",
+				"github.vscode-pull-request-github",
+				"mikestead.dotenv",
+				"humao.rest-client",
+				"timonwong.shellcheck",
+				"EditorConfig.EditorConfig",
+				"ms-vsliveshare.vsliveshare",
+				"github.copilot"
+			],
+			"settings": {
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.fixAll": true
+				}
+			}
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "uname -a",
+	"remoteUser": "vscode",
+	"features": {
+	  "ghcr.io/devcontainers/features/azure-cli:1": {
+		"version": "2.39.0"
+	  }
+	}
+}
