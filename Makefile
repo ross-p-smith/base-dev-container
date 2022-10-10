@@ -20,7 +20,7 @@ help: ## 💬 This help message :)
 	@echo -e "\e[34m$@\e[0m" || true
 	@grep -E '[a-zA-Z_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-all: bootstrap buildimage pushimage buildfunc deploy ## 🏃‍♀️ Run all the things
+all: bootstrap build deploy ## 🏃‍♀️ Run all the things
 
 lint: ## 🌟 Lint & format, will not fix but sets exit code on error, use in CI
 	@echo -e "\e[34m$@\e[0m" || true
@@ -28,7 +28,7 @@ lint: ## 🌟 Lint & format, will not fix but sets exit code on error, use in CI
 
 build: ## 🔨 Run a local binary build without a container
 	@echo -e "\e[34m$@\e[0m" || true
-	@echo "Not implemented yet!"
+	@echo "Build your binary here . . . (Maybe push it to ACR)"
 
 run: ## 🏃 Run application, used for local development
 	@echo -e "\e[34m$@\e[0m" || true
@@ -56,10 +56,10 @@ e2e-test: ## 🤖 Run end to end tests against the API
 
 clean: ## 🧹 Clean up local files
 	@figlet $@ || true
-	@rm -rf infra/tf/.terraform
-	@rm -rf infra/tf/terraform.tfstate.*
-	@rm -rf infra/tf/*.tfplan
-	@rm -rf infra/tf/bootstrap_*.*
+	@rm -rf infra/terraform/.terraform
+	@rm -rf infra/terraform/terraform.tfstate.*
+	@rm -rf infra/terraform/*.tfplan
+	@rm -rf infra/terraform/bootstrap_*.*
 	@find ./src -type d -name 'bin' | xargs rm -rf
 	@find ./src -type d -name 'obj' | xargs rm -rf
 	@find ./src -name 'coverage.json' | xargs rm -rf

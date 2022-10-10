@@ -8,28 +8,31 @@ set -euo pipefail
 WORKSPACE=${WORKSPACE:-default}
 echo -e "\e[34mWORKSPACE is $WORKSPACE\e[0m"
 
+# We can run this script as a SPN when we are in CI or as a UPN when building
+# locally. Because these AAD objects are different we need to handle the object_id
+# differently and not rely on Terraform to do it for us.
 if [ -z "${ARM_CLIENT_ID:-}" ]; then
   SIGNED_IN_USER=$(az ad signed-in-user show --query "{displayName:displayName, id:id}" -o json)
   TF_VAR_deployer_object_id=$(echo "$SIGNED_IN_USER" | jq -r .id)
   TF_VAR_deployer_display_name=$(echo "$SIGNED_IN_USER" | jq -r .displayName)
-  TF_VAR_dbranch_id=$(git symbolic-ref --short HEAD)
+  TF_VAR_branch_id=$(git symbolic-ref --short HEAD)
 else
   TF_VAR_deployer_object_id=$(az ad sp show --id "${ARM_CLIENT_ID}" --query id --out tsv)
 fi
 
+# We export these variables so they are available to the Terraform scripts
 export TF_VAR_deployer_object_id
 export TF_VAR_deployer_display_name
-export TF_VAR_dbranch_id
+export TF_VAR_branch_id
 
 # Initialise the terraform providers
 terraform -chdir=infra/terraform init
 
 # Switch to a workspace if one is supplied
 workspace_exists=$(
-  terraform -chdir=infra/tf workspace list | grep -qE "\s${WORKSPACE}$"
+  terraform -chdir=infra/terraform workspace list | grep -qE "\s${WORKSPACE}$"
   echo $?
 )
-
 if [[ "$workspace_exists" == "0" ]]; then
   echo -e "\e[34mWORKSPACE $WORKSPACE found - selecting\e[0m"
   terraform -chdir=infra/terraform workspace select "$WORKSPACE"

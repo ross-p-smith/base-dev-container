@@ -15,10 +15,10 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-${var.BASE_APP_NAME}-${terraform.workspace}"
+  name     = "rg-${var.project_name}-${terraform.workspace}"
   location = var.location
   tags = {
-    Deployer = var.deployer_id
+    Deployer = var.deployer_display_name
     Branch   = var.branch_id
   }
 }

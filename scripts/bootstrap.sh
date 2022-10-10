@@ -9,13 +9,13 @@ set -euo pipefail
 
 # Get the Azure subscription ID
 arm_subscription_id=$(az account show --query id -o tsv)
-mgmt_resource_group_name="rg-${PROJECT_NAME}-mgmt"
-storage_account_name="${PROJECT_NAME}state${arm_subscription_id:24}"
+mgmt_resource_group_name="rg-${TF_VAR_project_name}-mgmt"
+storage_account_name="${TF_VAR_project_name}state${arm_subscription_id:24}"
 
 # Create management resource group
 az group create \
   --name "${mgmt_resource_group_name}" \
-  --location "$LOCATION"
+  --location "$TF_VAR_location"
 
 # Create storage account
 az storage account create \
@@ -39,7 +39,7 @@ terraform {
     resource_group_name  = "${mgmt_resource_group_name}"
     storage_account_name = "${storage_account_name}"
     container_name       = "tfstate"
-    key                  = "${PROJECT_NAME}"
+    key                  = "${TF_VAR_project_name}"
   }
 }
 BOOTSTRAP_BACKEND

@@ -1,13 +1,10 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/alpine
 {
 	"name": "YourProjectName",
 	"dockerFile": "Dockerfile",
 	"mounts": [
 		// Mounts the login details from the host machine to azcli works in the container
-		"type=bind,source=${env:HOME}${env:USERPROFILE}/.azure,target=/home/vscode/.azure",
-		// Mount docker socket for docker builds
-		//"type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock"
+		"type=bind,source=${env:HOME}${env:USERPROFILE}/.azure,target=/home/vscode/.azure"
 	],
 	"containerEnv": {
 		"DOCKER_BUILDKIT": "1"
@@ -41,6 +38,9 @@
 	"features": {
 	  "ghcr.io/devcontainers/features/azure-cli:1": {
 		"version": "2.39.0"
-	  }
+	  },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "1.2"
+    }
 	}
 }
